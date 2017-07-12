@@ -10,18 +10,23 @@
   "author": "Micho García <micho.garcia@geomati.co>",
   "license": "GPLv3",
   "scripts": {
+    "lint": "eslint src/ test/",
+    "pretest": "npm run lint && npm run build && npm run build:tests",
+    "test": "mocha compiled_tests/",
+    "test:nolint": "npm run build && npm run build:tests && mocha compiled_tests/",
     "build": "babel src/ --out-dir dist/",
-    "test": "mocha",
-    "coverage": "nyc mocha",
-    "lint": "eslint src/ tests/"
+    "build:tests": "babel test/ --out-dir compiled_tests/"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.0",
     "eslint": "^3.19.0",
-    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "mocha": "^3.4.2",
     "nyc": "^11.0.3"
   },
