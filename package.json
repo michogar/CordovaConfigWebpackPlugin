@@ -1,6 +1,6 @@
 {
-  "name": "CordovaConfigWebpackPlugin",
-  "version": "1.0.0",
+  "name": "cordova-webpack-config-plugin",
+  "version": "0.1.0",
   "description": "A Webpack plugin to modify config.xml in build",
   "main": "dist/index.js",
   "repository": {
@@ -36,5 +36,8 @@
     "config.xml",
     "cordova",
     "modify"
-  ]
+  ],
+  "dependencies": {
+    "elementtree": "^0.1.7"
+  }
 }
