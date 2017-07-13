@@ -25,10 +25,11 @@ const readXML = () => {
   return configXml.find('content[@src]')
 }
 
+const START_PAGE = 'index.html'
+
 describe('CordovaConfigWebpackPlugin', () => {
   'use strict'
   afterEach(() => {
-    const START_PAGE = 'index.html'
     const filename = path.resolve(MockCompiler.context, 'config.xml')
     let configXml = parseXml(filename)
     let contentTag = configXml.find('content[@src]')
@@ -48,11 +49,8 @@ describe('CordovaConfigWebpackPlugin', () => {
     expect(readXML().attrib.src).to.equal(fakeOptions.page)
   })
   it('Should run without options set', () => {
-    const fakeOptions = {
-      page: 'fake.html'
-    }
     const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin()
     cordovaConfigWebpackPlugin.apply(MockCompiler)
-    expect(readXML().attrib.src).to.equal(fakeOptions.page)
+    expect(readXML().attrib.src).to.equal(START_PAGE)
   })
 })
