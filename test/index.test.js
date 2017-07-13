@@ -47,4 +47,12 @@ describe('CordovaConfigWebpackPlugin', () => {
     cordovaConfigWebpackPlugin.apply(MockCompiler)
     expect(readXML().attrib.src).to.equal(fakeOptions.page)
   })
+  it('Should run without options set', () => {
+    const fakeOptions = {
+      page: 'fake.html'
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin()
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    expect(readXML().attrib.src).to.equal(fakeOptions.page)
+  })
 })
