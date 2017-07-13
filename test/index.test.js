@@ -4,7 +4,7 @@ import et from 'elementtree'
 const fs = require('fs')
 const path = require('path')
 
-const CordovaConfigWebpackPlugin = require('./../dist/index')
+const CordovaConfigWebpackPlugin = require('./../lib/index')
 
 const MockCompiler = {
   plugin: (signal, cb) => {
