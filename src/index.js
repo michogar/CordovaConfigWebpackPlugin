@@ -32,7 +32,7 @@ function CordovaConfigWebpackPlugin (options) {
       let configXml = parseXml(filename)
       let contentTag = configXml.find('content[@src]')
       if (contentTag) {
-        contentTag.attrib.src = (options.page) ? options.page : START_PAGE
+        contentTag.attrib.src = (options && options.page) ? options.page : START_PAGE
       }
       fs.writeFileSync(filename, configXml.write({
         indent: 4
