@@ -1,6 +1,6 @@
 {
   "name": "cordova-webpack-config-plugin",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "A Webpack plugin to modify config.xml in build",
   "main": "lib/index.js",
   "repository": {
@@ -17,7 +17,7 @@
     "build": "babel src/ --out-dir lib/",
     "build:tests": "babel test/ --out-dir compiled_tests/",
     "preversion": "npm test",
-    "version" : "npm run build"
+    "version": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
