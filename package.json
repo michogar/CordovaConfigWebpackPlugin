@@ -15,7 +15,9 @@
     "test": "mocha compiled_tests/",
     "test:nolint": "npm run build && npm run build:tests && mocha compiled_tests/",
     "build": "babel src/ --out-dir lib/",
-    "build:tests": "babel test/ --out-dir compiled_tests/"
+    "build:tests": "babel test/ --out-dir compiled_tests/",
+    "preversion": "npm test",
+    "version" : "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
