@@ -8,17 +8,23 @@ Install the plugin:
 
     npm i -D cordova-webpack-config-plugin
     
-CordovaConfigWebpackPlugin will look for `config.xml` into the `context` path from `webpack`
+CordovaConfigWebpackPlugin will look for `config.xml` into the `context` path from `webpack`.
+
+Replace values passed as object into `config.xml` values. Launchs exception if tag passed isn't 
+into the `config.xml`
   
 ### Usage
 
     new CordovaConfigWebpackPlugin({
-        page: '<Value which will be replaced config.xml'
+        content: {
+            src: "index.html"
+        },
+        widget: {
+            version: "2.0.0"
+        }
+        ...
     })
 
-| Name | Required | Default | Details |
-| ---- | -------- | ------- | ------- |
-| **page** | Optional | "index.html" | "http://localhost:8080" | 
 
 ### Examples
 
@@ -29,9 +35,14 @@ CordovaConfigWebpackPlugin will look for `config.xml` into the `context` path fr
         context: path.join(__dirname, 'app'),
         plugins: [
             new CordovaConfigWebpackPlugin({
-                page: "http://localhost:8080"           
+                content: {
+                    src: "http://localhost:8080"
+                }           
             })
         ]
     }
+    
+### RoadMap
+* Add manage of `preferences`
                 
 ![](https://www.gnu.org/graphics/gplv3-88x31.png)

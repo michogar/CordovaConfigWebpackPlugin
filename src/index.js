@@ -26,15 +26,35 @@ function CordovaConfigWebpackPlugin (options) {
   'use strict'
 
   const apply = (compiler) => {
-    const START_PAGE = 'index.html'
     compiler.plugin('done', () => {
       const filename = path.resolve(compiler.context, 'config.xml')
-      let configXml = parseXml(filename)
-      let contentTag = configXml.find('content[@src]')
-      if (contentTag) {
-        contentTag.attrib.src = (options && options.page) ? options.page : START_PAGE
+      let xml = parseXml(filename)
+      if (options) {
+        Object.keys(options).forEach((tag) => {
+          if (typeof options[tag] !== 'object') {
+            throw new Error(`Not config options defined correctly!! See: https://github.com/michogar/CordovaConfigWebpackPlugin/blob/master/README.md`)
+          } else {
+            const FIRST = 0
+            const attr = Object.keys(options[tag])[FIRST]
+            const value = options[tag][attr]
+            const toFind = `${tag}[@${attr}]`
+            if (tag === 'widget') {
+              xml.getroot().attrib[attr] = value
+            } else {
+              let contentTag = xml.find(toFind)
+              console.log(contentTag)
+              if (contentTag) {
+                contentTag.attrib[attr] = value
+              } else {
+                throw new Error(`No tag: ${tag} found!!`)
+              }
+            }
+          }
+        })
+      } else {
+        throw new Error(`Not config options defined!!`)
       }
-      fs.writeFileSync(filename, configXml.write({
+      fs.writeFileSync(filename, xml.write({
         indent: 4
       }), 'utf-8')
     })
