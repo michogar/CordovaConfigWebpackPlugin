@@ -17,9 +17,10 @@
     "build": "babel src/ --out-dir lib/",
     "build:tests": "babel test/ --out-dir compiled_tests/",
     "preversion": "npm test",
-    "version": "npm run build"
+    "version": "npm run build && npx auto-changelog -p --commit-limit false && git add CHANGELOG.md"
   },
   "devDependencies": {
+    "auto-changelog": "^1.4.4",
     "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.0",
