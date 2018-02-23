@@ -42,6 +42,27 @@ into the `config.xml`
         ]
     }
     
+    module.exports = {
+        context: path.join(__dirname, 'app'),
+        plugins: [
+            new CordovaConfigWebpackPlugin({
+                autor: {
+                    email: "fake@fake.invalid",
+                    href: "http://fake.invalid"
+                }           
+            })
+        ]
+    }
+    
+    module.exports = {
+        context: path.join(__dirname, 'app'),
+        plugins: [
+            new CordovaConfigWebpackPlugin({
+                name: "fake name"          
+            })
+        ]
+    }
+    
 ### RoadMap
 * Add manage of `preferences`
                 
