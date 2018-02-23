@@ -1,6 +1,6 @@
 {
   "name": "cordova-webpack-config-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Webpack plugin to modify config.xml in build",
   "main": "lib/index.js",
   "repository": {
