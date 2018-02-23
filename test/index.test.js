@@ -88,4 +88,21 @@ describe('CordovaConfigWebpackPlugin specs: ', () => {
     expect(parseFile().find('description').text).to.equal(multiple.description)
     expect(parseFile().find('a_number').text).to.equal(`${multiple.a_number}`)
   })
+
+  it('Should change multiple elements', () => {
+    const author = {
+      email: 'fake@fake.invalid',
+      repo: 'https://fake.com/fake'
+    }
+    const fakeOptions = {
+      author: {
+        email: author.email,
+        href: author.repo
+      }
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin(fakeOptions)
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    expect(parseFile().find('author[@email]').attrib.email).to.equal(fakeOptions.author.email)
+    expect(parseFile().find('author[@href]').attrib.href).to.equal(fakeOptions.author.href)
+  })
 })
