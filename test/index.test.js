@@ -60,7 +60,7 @@ describe('CordovaConfigWebpackPlugin specs: ', () => {
     expect(parseFile().find('access[@origin]').attrib.origin).to.equal(fakeOptions.access.origin)
   })
 
-  it.only('Should launch error if not found field in config.xml', () => {
+  it('Should launch error if not found field in config.xml', () => {
     const fakeOptions = {
       fake: {
         origin: 'fakeorigin'
@@ -74,5 +74,18 @@ describe('CordovaConfigWebpackPlugin specs: ', () => {
       err = true
     }
     expect(err).to.equal(true)
+  })
+
+  it('Should be possible replace text elements', () => {
+    const multiple = {
+      name: 'Custom Content',
+      description: 'Custom Content',
+      a_number: 999
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin(multiple)
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    expect(parseFile().find('name').text).to.equal(multiple.description)
+    expect(parseFile().find('description').text).to.equal(multiple.description)
+    expect(parseFile().find('a_number').text).to.equal(`${multiple.a_number}`)
   })
 })

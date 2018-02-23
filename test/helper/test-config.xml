@@ -9,4 +9,5 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <a_number>666</a_number>
 </widget>

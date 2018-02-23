@@ -31,18 +31,18 @@ function CordovaConfigWebpackPlugin (options) {
       let xml = parseXml(filename)
       if (options) {
         Object.keys(options).forEach((tag) => {
-          if (typeof options[tag] !== 'object') {
-            throw new Error(`Not config options defined correctly!! See: https://github.com/michogar/CordovaConfigWebpackPlugin/blob/master/README.md`)
-          } else {
+          if (['string', 'number', 'boolean'].includes(typeof options[tag])) {
+            console.log(tag)
+            xml.find(tag).text = options[tag]
+          } else if (typeof options[tag] === 'object') {
             const FIRST = 0
             const attr = Object.keys(options[tag])[FIRST]
             const value = options[tag][attr]
-            const toFind = `${tag}[@${attr}]`
             if (tag === 'widget') {
               xml.getroot().attrib[attr] = value
             } else {
+              const toFind = `${tag}[@${attr}]`
               let contentTag = xml.find(toFind)
-              console.log(contentTag)
               if (contentTag) {
                 contentTag.attrib[attr] = value
               } else {
