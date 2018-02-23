@@ -31,23 +31,23 @@ function CordovaConfigWebpackPlugin (options) {
       let xml = parseXml(filename)
       if (options) {
         Object.keys(options).forEach((tag) => {
-          if (typeof options[tag] !== 'object') {
-            throw new Error(`Not config options defined correctly!! See: https://github.com/michogar/CordovaConfigWebpackPlugin/blob/master/README.md`)
-          } else {
-            const FIRST = 0
-            const attr = Object.keys(options[tag])[FIRST]
-            const value = options[tag][attr]
-            const toFind = `${tag}[@${attr}]`
+          const FIRST = 0
+          const attr = Object.keys(options[tag])[FIRST]
+          if (['string', 'number', 'boolean'].includes(typeof options[tag])) {
+            xml.find(tag).text = options[tag]
+          } else if (typeof options[tag] === 'object') {
             if (tag === 'widget') {
-              xml.getroot().attrib[attr] = value
+              xml.getroot().attrib[attr] = options[tag][attr]
             } else {
-              let contentTag = xml.find(toFind)
-              console.log(contentTag)
-              if (contentTag) {
-                contentTag.attrib[attr] = value
-              } else {
-                throw new Error(`No tag: ${tag} found!!`)
-              }
+              Object.keys(options[tag]).forEach((childTag) => {
+                const toFind = `${tag}[@${childTag}]`
+                let contentTag = xml.find(toFind)
+                if (contentTag) {
+                  contentTag.attrib[childTag] = options[tag][childTag]
+                } else {
+                  throw new Error(`No tag: ${childTag} found!!`)
+                }
+              })
             }
           }
         })
