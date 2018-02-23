@@ -60,7 +60,7 @@ describe('CordovaConfigWebpackPlugin specs: ', () => {
     expect(parseFile().find('access[@origin]').attrib.origin).to.equal(fakeOptions.access.origin)
   })
 
-  it.only('Should launch error if not found field in config.xml', () => {
+  it('Should launch error if not found field in config.xml', () => {
     const fakeOptions = {
       fake: {
         origin: 'fakeorigin'
@@ -74,5 +74,35 @@ describe('CordovaConfigWebpackPlugin specs: ', () => {
       err = true
     }
     expect(err).to.equal(true)
+  })
+
+  it('Should be possible replace text elements', () => {
+    const multiple = {
+      name: 'Custom Content',
+      description: 'Custom Content',
+      a_number: 999
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin(multiple)
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    expect(parseFile().find('name').text).to.equal(multiple.description)
+    expect(parseFile().find('description').text).to.equal(multiple.description)
+    expect(parseFile().find('a_number').text).to.equal(`${multiple.a_number}`)
+  })
+
+  it('Should change multiple elements', () => {
+    const author = {
+      email: 'fake@fake.invalid',
+      repo: 'https://fake.com/fake'
+    }
+    const fakeOptions = {
+      author: {
+        email: author.email,
+        href: author.repo
+      }
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin(fakeOptions)
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    expect(parseFile().find('author[@email]').attrib.email).to.equal(fakeOptions.author.email)
+    expect(parseFile().find('author[@href]').attrib.href).to.equal(fakeOptions.author.href)
   })
 })
