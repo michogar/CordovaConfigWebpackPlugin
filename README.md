@@ -8,10 +8,10 @@ Install the plugin:
 
     npm i -D cordova-webpack-config-plugin
     
-CordovaConfigWebpackPlugin will look for `config.xml` into the `context` path from `webpack`.
+CordovaConfigWebpackPlugin will look for `config.xml` relative to the `context` path from `webpack`.
 
-Replace values passed as object into `config.xml` values. Launchs exception if tag passed isn't 
-into the `config.xml`
+Replace values passed as an object in `config.xml` values. Launches exception if tag passed isn't 
+present in the `config.xml` file.
   
 ### Usage
 
@@ -64,6 +64,3 @@ into the `config.xml`
     }
     
 ### RoadMap
-* Add manage of `preferences`
-                
-![](https://www.gnu.org/graphics/gplv3-88x31.png)
