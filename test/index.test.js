@@ -15,18 +15,17 @@ const MockCompiler = {
   context: './test/helper'
 }
 
-const parseFile = () => {
-  const filename = path.resolve(MockCompiler.context, 'config.xml')
-  return new et.ElementTree(et.XML(fs.readFileSync(filename, 'utf-8').replace(/^\uFEFF/, '')))
+const parseFile = (filepath = path.resolve(MockCompiler.context, 'config.xml')) => {
+  return new et.ElementTree(et.XML(fs.readFileSync(filepath, 'utf-8').replace(/^\uFEFF/, '')))
 }
 
-const copyFileToTest = () => {
+const copyFileToTest = (filepath = `${MockCompiler.context}${separator}config.xml`) => {
   const data = fs.readFileSync(`${MockCompiler.context}${separator}test-config.xml`, 'utf-8')
-  fs.writeFileSync(`${MockCompiler.context}${separator}config.xml`, data)
+  fs.writeFileSync(filepath, data)
 }
 
-const removeFileToTest = () => {
-  fs.unlinkSync(`${MockCompiler.context}${separator}config.xml`)
+const removeFileToTest = (filepath = `${MockCompiler.context}${separator}config.xml`) => {
+  fs.unlinkSync(filepath)
 }
 
 describe('CordovaConfigWebpackPlugin specs: ', () => {
@@ -124,5 +123,50 @@ describe('CordovaConfigWebpackPlugin specs: ', () => {
     expect(parseFile().find('author').text).to.equal(fakeOptions.author._)
     expect(parseFile().find('author[@email]').attrib.email).to.equal(fakeOptions.author.email)
     expect(parseFile().find('author[@href]').attrib.href).to.equal(fakeOptions.author.href)
+  })
+
+  it('Should read from the input file specified relative to webpack config context path', () => {
+    const inputFolder = 'in'
+    const inputFile = 'template-config.xml'
+    const filepath = `${MockCompiler.context}${separator}${inputFolder}${separator}${inputFile}`
+    const folderpath = path.resolve(MockCompiler.context, inputFolder)
+    // Make a copy of the usual test input file using a different path/name
+    if (!fs.existsSync(folderpath)) {
+      fs.mkdirSync(folderpath)
+    }
+    copyFileToTest(filepath)
+    const options = {
+      _: {
+        inputPath: `${inputFolder}${separator}${inputFile}`
+      }
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin(options)
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    // File contents should be equal since nothing was configured to be changed
+    expect(fs.readFileSync(filepath, 'utf-8')).to.equal(fs.readFileSync(`${MockCompiler.context}${separator}config.xml`, 'utf-8'))
+    // Clean up copied file and folder
+    removeFileToTest(filepath)
+    fs.rmdirSync(folderpath)
+  })
+
+  it('Should write to the output file specified relative to webpack config context path', () => {
+    const outputFolder = 'out'
+    const outputFile = 'cordova-config.xml'
+    const filepath = `${MockCompiler.context}${separator}${outputFolder}${separator}${outputFile}`
+    const folderpath = path.resolve(MockCompiler.context, outputFolder)
+    if (!fs.existsSync(folderpath)) {
+      fs.mkdirSync(folderpath)
+    }
+    const options = {
+      _: {
+        outputPath: `${outputFolder}${separator}${outputFile}`
+      }
+    }
+    const cordovaConfigWebpackPlugin = CordovaConfigWebpackPlugin(options)
+    cordovaConfigWebpackPlugin.apply(MockCompiler)
+    expect(parseFile(filepath).find('name').text).to.equal('HelloWorld')
+    // Clean up output file and folder
+    removeFileToTest(filepath)
+    fs.rmdirSync(folderpath)
   })
 })
