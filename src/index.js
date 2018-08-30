@@ -30,30 +30,25 @@ function CordovaConfigWebpackPlugin (options) {
       if (options) {
         let inputFileName = path.resolve(compiler.context, options._ && options._.inputPath ? options._.inputPath : 'config.xml')
         let xml = parseXml(inputFileName)
+        const xmlRoot = xml.getroot()
         Object.keys(options).forEach((tag) => {
           if (tag !== '_') {
-            const FIRST = 0
-            const attr = Object.keys(options[tag])[FIRST]
             if (['string', 'number', 'boolean'].includes(typeof options[tag])) {
               xml.find(tag).text = options[tag]
             } else if (typeof options[tag] === 'object') {
-              if (tag === 'widget') {
-                xml.getroot().attrib[attr] = options[tag][attr]
-              } else {
-                Object.keys(options[tag]).forEach((childTag) => {
-                  const isInnerTextReplacement = childTag === '_'
-                  const toFind = isInnerTextReplacement ? `${tag}` : `${tag}[@${childTag}]`
-                  let contentTag = xml.find(toFind)
-                  if (contentTag) {
-                    if (isInnerTextReplacement) {
-                      contentTag.text = options[tag][childTag]
-                    }
-                    contentTag.attrib[childTag] = options[tag][childTag]
-                  } else {
-                    throw new Error(`No tag named '${childTag}' found!!`)
+              Object.keys(options[tag]).forEach((childTag) => {
+                const isInnerTextReplacement = childTag === '_'
+                const toFind = isInnerTextReplacement ? `${tag}` : `${tag}[@${childTag}]`
+                let contentTag = xmlRoot.tag === tag ? xmlRoot : xml.find(toFind)
+                if (contentTag) {
+                  if (isInnerTextReplacement) {
+                    contentTag.text = options[tag][childTag]
                   }
-                })
-              }
+                  contentTag.attrib[childTag] = options[tag][childTag]
+                } else {
+                  throw new Error(`No tag named '${childTag}' found!!`)
+                }
+              })
             }
           }
         })

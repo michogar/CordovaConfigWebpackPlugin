@@ -34,6 +34,8 @@ The `_` object allows configuration of the plugin itself. All other options affe
 
 `outputPath` can be used to indicate a file to be used (created or modified) as output in case you don't want to modify your source Cordova configuration file or do want to output to a path other than your webpack `context` path (useful for source control where you don't want to trigger a commit for dynamic configuration values or to have more control over the location of your Cordova project). If omitted, `inputPath` is assumed.
 
+Simply omit the `_` options to modify the `config.xml` file in place.
+
 ### Examples
 
 Given the config.xml sample file:
