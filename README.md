@@ -8,9 +8,9 @@ Install the plugin:
 
     npm i -D cordova-webpack-config-plugin
     
-CordovaConfigWebpackPlugin will look for `config.xml` relative to the `context` path from `webpack`.
+CordovaConfigWebpackPlugin will look for `config.xml` relative to the `context` path from `webpack` configuration.
 
-Replace values passed as an object in `config.xml` values. Launches exception if tag passed isn't 
+Replace values passed as an object in `config.xml` values. Throws exception if tag passed isn't 
 present in the `config.xml` file.
   
 ### Usage
