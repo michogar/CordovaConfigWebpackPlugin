@@ -40,12 +40,16 @@ function CordovaConfigWebpackPlugin (options) {
               xml.getroot().attrib[attr] = options[tag][attr]
             } else {
               Object.keys(options[tag]).forEach((childTag) => {
-                const toFind = `${tag}[@${childTag}]`
+                const isInnerTextReplacement = childTag === '_'
+                const toFind = isInnerTextReplacement ? `${tag}` : `${tag}[@${childTag}]`
                 let contentTag = xml.find(toFind)
                 if (contentTag) {
+                  if (isInnerTextReplacement) {
+                    contentTag.text = options[tag][childTag]
+                  }
                   contentTag.attrib[childTag] = options[tag][childTag]
                 } else {
-                  throw new Error(`No tag: ${childTag} found!!`)
+                  throw new Error(`No tag named '${childTag}' found!!`)
                 }
               })
             }
