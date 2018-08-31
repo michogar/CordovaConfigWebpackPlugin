@@ -27,36 +27,38 @@ function CordovaConfigWebpackPlugin (options) {
 
   const apply = (compiler) => {
     compiler.plugin('done', () => {
-      const filename = path.resolve(compiler.context, 'config.xml')
-      let xml = parseXml(filename)
       if (options) {
+        let inputFileName = path.resolve(compiler.context, options._ && options._.inputPath ? options._.inputPath : 'config.xml')
+        let xml = parseXml(inputFileName)
+        const xmlRoot = xml.getroot()
         Object.keys(options).forEach((tag) => {
-          const FIRST = 0
-          const attr = Object.keys(options[tag])[FIRST]
-          if (['string', 'number', 'boolean'].includes(typeof options[tag])) {
-            xml.find(tag).text = options[tag]
-          } else if (typeof options[tag] === 'object') {
-            if (tag === 'widget') {
-              xml.getroot().attrib[attr] = options[tag][attr]
-            } else {
+          if (tag !== '_') {
+            if (['string', 'number', 'boolean'].includes(typeof options[tag])) {
+              xml.find(tag).text = options[tag]
+            } else if (typeof options[tag] === 'object') {
               Object.keys(options[tag]).forEach((childTag) => {
-                const toFind = `${tag}[@${childTag}]`
-                let contentTag = xml.find(toFind)
+                const isInnerTextReplacement = childTag === '_'
+                const toFind = isInnerTextReplacement ? `${tag}` : `${tag}[@${childTag}]`
+                let contentTag = xmlRoot.tag === tag ? xmlRoot : xml.find(toFind)
                 if (contentTag) {
+                  if (isInnerTextReplacement) {
+                    contentTag.text = options[tag][childTag]
+                  }
                   contentTag.attrib[childTag] = options[tag][childTag]
                 } else {
-                  throw new Error(`No tag: ${childTag} found!!`)
+                  throw new Error(`No tag named '${childTag}' found!!`)
                 }
               })
             }
           }
         })
+        let outputFileName = options._ && options._.outputPath ? path.resolve(compiler.context, options._.outputPath) : inputFileName
+        fs.writeFileSync(outputFileName, xml.write({
+          indent: 4
+        }), 'utf-8')
       } else {
-        throw new Error(`Not config options defined!!`)
+        throw new Error(`No config options defined!!`)
       }
-      fs.writeFileSync(filename, xml.write({
-        indent: 4
-      }), 'utf-8')
     })
   }
   return {
